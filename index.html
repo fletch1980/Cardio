@@ -26,6 +26,7 @@
   .style-afro{background:linear-gradient(135deg,#f59e0b,#d97706)}
   .style-hiphop{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
   .style-latin{background:linear-gradient(135deg,#ef4444,#dc2626)}
+  .style-burlesque{background:linear-gradient(135deg,#be185d,#9d174d)}
   .session-name{font-weight:700;font-size:1rem;color:#f0e6ff}
   .session-sub{font-size:.78rem;color:#a78bfa;margin-top:2px}
   .video-section{margin-bottom:14px}
@@ -73,7 +74,7 @@
 <body>
 <a class="back-btn" href="https://fletch1980.github.io/Complete_goddess/" target="_self">← Complete Goddess</a>
 <h1>💃 Dance Cardio</h1>
-<div class="sub">Afrobeats · Hip Hop · Latin · 3×/week · Free on YouTube</div>
+<div class="sub">Afrobeats · Hip Hop · Latin · Burlesque · 4×/week · Free on YouTube</div>
 
 <div id="phaseArea" style="text-align:center;margin-bottom:14px"></div>
 <div class="stats-row" id="statsRow"></div>
@@ -99,38 +100,44 @@
 <!-- Data — plain JS -->
 <script>
 var STORAGE_PREFIX_DCD='dcd_';
-var SESSIONS_TO_ADVANCE_DCD=3;
-var DAYS=['Wed','Sat','Sun'];
-var DAY_FULL={Wed:'Wednesday',Sat:'Saturday',Sun:'Sunday'};
+var SESSIONS_TO_ADVANCE_DCD=4;
+var DAYS=['Wed','Thu','Sat','Sun'];
+var DAY_FULL={Wed:'Wednesday',Thu:'Thursday',Sat:'Saturday',Sun:'Sunday'};
 
 var SESSIONS={
   Wed:{style:'Hip Hop / Twerk',icon:'🔥',cls:'style-hiphop'},
+  Thu:{style:'Burlesque',icon:'💋',cls:'style-burlesque'},
   Sat:{style:'Afrobeats',icon:'🌍',cls:'style-afro'},
   Sun:{style:'Latin (Salsa / Reggaeton)',icon:'💃',cls:'style-latin'}
 };
 
 var VIDEOS={
   hiphop:[
-    {title:'Hip Hop Dance Workout – 30 min',channel:'YouTube Search',dur:'30 min',url:'https://www.youtube.com/results?search_query=hip+hop+twerk+dance+workout+30+min'},
-    {title:'Twerk Cardio Workout – Beginner Friendly',channel:'YouTube Search',dur:'25 min',url:'https://www.youtube.com/results?search_query=twerk+cardio+workout+beginner'},
-    {title:'Hip Hop Cardio Dance – No Equipment',channel:'YouTube Search',dur:'28 min',url:'https://www.youtube.com/results?search_query=hip+hop+cardio+dance+no+equipment'}
+    {title:'Hip Shake Fitness — Twerk Cardio 30 min',channel:'Hip Shake Fitness',dur:'30 min',url:'https://www.youtube.com/results?search_query=hip+shake+fitness+twerk+cardio+workout'},
+    {title:'Hip Shake Fitness — Hip Hop Dance Workout',channel:'Hip Shake Fitness',dur:'25 min',url:'https://www.youtube.com/results?search_query=hip+shake+fitness+hip+hop+dance+workout'},
+    {title:'Hip Shake Fitness — Tone N Twerk',channel:'Hip Shake Fitness',dur:'28 min',url:'https://www.youtube.com/results?search_query=hip+shake+fitness+tone+n+twerk'}
+  ],
+  burlesque:[
+    {title:'Hip Shake Fitness — Burlesque Burn Workout',channel:'Hip Shake Fitness',dur:'20 min',url:'https://www.youtube.com/results?search_query=hip+shake+fitness+burlesque+burn+workout'},
+    {title:'Hip Shake Fitness — Burlesque Chair Dance',channel:'Hip Shake Fitness',dur:'25 min',url:'https://www.youtube.com/results?search_query=hip+shake+fitness+burlesque+chair+dance+workout'},
+    {title:'Hip Shake Fitness — Beginner Burlesque Moves',channel:'Hip Shake Fitness',dur:'20 min',url:'https://www.youtube.com/results?search_query=hip+shake+fitness+beginner+burlesque+dance+moves'}
   ],
   afro:[
-    {title:'Afrobeats Dance Workout – Full Body',channel:'YouTube Search',dur:'30 min',url:'https://www.youtube.com/results?search_query=afrobeats+dance+workout+full+body'},
-    {title:'Kukuwa African Dance Workout',channel:'Kukuwa Fitness',dur:'25 min',url:'https://www.youtube.com/results?search_query=kukuwa+african+dance+workout'},
-    {title:'Afro Dance Cardio – Feel the Beat',channel:'YouTube Search',dur:'28 min',url:'https://www.youtube.com/results?search_query=afro+dance+cardio+workout'}
+    {title:'GrowWithJo — Afrobeats Dance Workout',channel:'GrowWithJo',dur:'30 min',url:'https://www.youtube.com/results?search_query=growwithjo+afrobeats+dance+workout'},
+    {title:'Kukuwa Fitness — African Dance Cardio',channel:'Kukuwa Fitness',dur:'25 min',url:'https://www.youtube.com/results?search_query=kukuwa+fitness+african+dance+cardio+workout'},
+    {title:'GrowWithJo — Afro Dance Cardio Full Body',channel:'GrowWithJo',dur:'28 min',url:'https://www.youtube.com/results?search_query=growwithjo+afro+dance+cardio+full+body'}
   ],
   latin:[
-    {title:'Zumba Latin Dance Workout – 30 min',channel:'Zumba',dur:'30 min',url:'https://www.youtube.com/results?search_query=zumba+latin+dance+workout+30+min+free'},
-    {title:'Salsa & Reggaeton Cardio',channel:'YouTube Search',dur:'25 min',url:'https://www.youtube.com/results?search_query=salsa+reggaeton+cardio+dance+workout'},
-    {title:'Latin Dance Fitness – No Experience Needed',channel:'YouTube Search',dur:'28 min',url:'https://www.youtube.com/results?search_query=latin+dance+fitness+beginner+cardio'}
+    {title:'Zumba with Dovydas — Latin Dance Party',channel:'Zumba with Dovydas',dur:'30 min',url:'https://www.youtube.com/results?search_query=zumba+with+dovydas+latin+dance+workout'},
+    {title:'POPSUGAR Fitness — Latin Dance Cardio 30 min',channel:'POPSUGAR Fitness',dur:'30 min',url:'https://www.youtube.com/results?search_query=popsugar+fitness+latin+dance+cardio+30+min'},
+    {title:'Zumba with Dovydas — Salsa Reggaeton Mix',channel:'Zumba with Dovydas',dur:'28 min',url:'https://www.youtube.com/results?search_query=zumba+dovydas+salsa+reggaeton+workout'}
   ]
 };
 
-var STYLE_KEY={Wed:'hiphop',Sat:'afro',Sun:'latin'};
+var STYLE_KEY={Wed:'hiphop',Thu:'burlesque',Sat:'afro',Sun:'latin'};
 var DURATION={1:'25 min',2:'25 min',3:'26 min',4:'26 min',5:'27 min',6:'27 min',7:'28 min',8:'28 min',9:'29 min',10:'29 min',11:'30 min',12:'30 min'};
 var INTENSITY={1:'High',2:'High',3:'High',4:'High',5:'Very High',6:'Very High',7:'Very High',8:'Very High',9:'Peak',10:'Peak',11:'Peak',12:'Peak'};
-var TIPS={1:'Focus on just moving to the beat — don\'t worry about getting it perfect.',2:'Try to feel each style\'s rhythm differently: Afro is grounded, Hip Hop is sharp, Latin is smooth.',3:'Let your hips lead. Your arms follow naturally.',4:'Pick one move per session to really nail this week.',5:'Push the intensity — you\'ve got the basics now.',6:'Try not to stop. Keep moving even when it gets hard.',7:'Focus on transitions between moves.',8:'Match your energy to the beat, not the other way around.',9:'Go all out. This is peak phase.',10:'Commit fully — full range of motion, full expression.',11:'Dance like nobody\'s watching. Max effort.',12:'Celebrate how far you\'ve come. Dance your heart out.'};
+var TIPS={1:'Focus on just moving to the beat — don\'t worry about getting it perfect.',2:'Try to feel each style\'s rhythm differently: Burlesque is slow and intentional, Afro is grounded, Hip Hop is sharp, Latin is smooth.',3:'Let your hips lead in everything. Your arms and expression follow.',4:'Pick one move per session to really nail this week.',5:'Push the intensity — you\'ve got the basics now.',6:'Try not to stop. Keep moving even when it gets hard.',7:'Focus on transitions between moves — that\'s where style lives.',8:'Match your energy to the beat, not the other way around.',9:'Go all out. This is peak phase.',10:'Commit fully — full range of motion, full expression.',11:'Dance like nobody\'s watching. Max effort.',12:'Celebrate how far you\'ve come. Dance your heart out.'};
 
 function safeGetDCD(k){try{return localStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
 function safeSetDCD(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
