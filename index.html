@@ -129,7 +129,7 @@ var VIDEOS={
 
 var STYLE_KEY={Wed:'hiphop',Sat:'afro',Sun:'latin'};
 var DURATION={1:'25 min',2:'25 min',3:'26 min',4:'26 min',5:'27 min',6:'27 min',7:'28 min',8:'28 min',9:'29 min',10:'29 min',11:'30 min',12:'30 min'};
-var INTENSITY={1:'Low–Moderate',2:'Moderate',3:'Moderate',4:'Moderate–High',5:'High',6:'High',7:'High',8:'High',9:'Very High',10:'Very High',11:'Peak',12:'Peak'};
+var INTENSITY={1:'High',2:'High',3:'High',4:'High',5:'Very High',6:'Very High',7:'Very High',8:'Very High',9:'Peak',10:'Peak',11:'Peak',12:'Peak'};
 var TIPS={1:'Focus on just moving to the beat — don\'t worry about getting it perfect.',2:'Try to feel each style\'s rhythm differently: Afro is grounded, Hip Hop is sharp, Latin is smooth.',3:'Let your hips lead. Your arms follow naturally.',4:'Pick one move per session to really nail this week.',5:'Push the intensity — you\'ve got the basics now.',6:'Try not to stop. Keep moving even when it gets hard.',7:'Focus on transitions between moves.',8:'Match your energy to the beat, not the other way around.',9:'Go all out. This is peak phase.',10:'Commit fully — full range of motion, full expression.',11:'Dance like nobody\'s watching. Max effort.',12:'Celebrate how far you\'ve come. Dance your heart out.'};
 
 function safeGetDCD(k){try{return localStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
@@ -167,7 +167,8 @@ var state={
   day:DAYS.includes(new Date().toLocaleDateString('en-US',{weekday:'short'}))?new Date().toLocaleDateString('en-US',{weekday:'short'}):'Wed',
   logs:JSON.parse(safeGet(STORAGE_PREFIX_DCD+'logs')||'[]'),
   historyOpen:{},
-  effort:{}
+  effort:{},
+  viewWeek:null
 };
 
 function saveLogs(){safeSet(STORAGE_PREFIX_DCD+'logs',JSON.stringify(state.logs));}
@@ -199,8 +200,9 @@ function renderDayToggle(){
 }
 
 function renderSession(){
-  var w=calcWeekDCD();
-  var sc=getSessionCountDCD(w);
+  var autoWeek=calcWeekDCD();
+  var w=state.viewWeek||autoWeek;
+  var sc=getSessionCountDCD(autoWeek);
   var d=state.day,sk=STYLE_KEY[d],sess=SESSIONS[d];
   var dur=DURATION[w],inten=INTENSITY[w],tip=TIPS[w];
   var vids=VIDEOS[sk];
@@ -322,14 +324,18 @@ window.logSession=function(){
 };
 
 function renderWeekGrid(){
-  var w=calcWeekDCD();
+  var autoWeek=calcWeekDCD();
+  var viewWeek=state.viewWeek||autoWeek;
   var g=document.getElementById('weekGrid');g.innerHTML='';
   for(var i=1;i<=12;i++){
-    var btn=document.createElement('div');
-    var isActive=(i===w);
-    btn.style.cssText='background:'+(isActive?'linear-gradient(135deg,#7c3aed,#db2777)':'rgba(255,255,255,.06)')+';border:1px solid '+(isActive?'transparent':'rgba(168,85,247,.2)')+';color:'+(isActive?'#fff':'#d8b4fe')+';border-radius:8px;padding:8px 4px;font-size:.8rem;font-weight:'+(isActive?'700':'400')+';text-align:center;';
-    btn.textContent='Wk '+i;
-    g.appendChild(btn);
+    (function(w){
+      var isActive=(w===viewWeek);
+      var btn=document.createElement('div');
+      btn.style.cssText='background:'+(isActive?'linear-gradient(135deg,#7c3aed,#db2777)':'rgba(255,255,255,.06)')+';border:1px solid '+(isActive?'transparent':'rgba(168,85,247,.2)')+';color:'+(isActive?'#fff':'#d8b4fe')+';border-radius:8px;padding:8px 4px;font-size:.8rem;font-weight:'+(isActive?'700':'400')+';text-align:center;cursor:pointer;';
+      btn.textContent='Wk '+w;
+      btn.onclick=function(){state.viewWeek=w;render();};
+      g.appendChild(btn);
+    })(i);
   }
 }
 
