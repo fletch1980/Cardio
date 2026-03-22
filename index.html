@@ -11,16 +11,12 @@
   .sub{text-align:center;color:#c084fc;font-size:.85rem;margin-bottom:18px}
   .back-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(168,85,247,.15);border:1px solid #7c3aed;color:#c084fc;padding:7px 14px;border-radius:20px;cursor:pointer;font-size:.82rem;text-decoration:none;margin-bottom:16px}
   .back-btn:hover{background:rgba(168,85,247,.3)}
-  .phase-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:.78rem;font-weight:700;letter-spacing:.5px;margin-bottom:14px}
+  .phase-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:.78rem;font-weight:700;letter-spacing:.5px;margin-bottom:4px}
   .phase-foundation{background:rgba(139,92,246,.25);border:1px solid #7c3aed;color:#c084fc}
   .phase-build{background:rgba(34,197,94,.15);border:1px solid #16a34a;color:#4ade80}
   .phase-peak{background:rgba(236,72,153,.2);border:1px solid #db2777;color:#f472b6}
   .section{background:rgba(255,255,255,.04);border:1px solid rgba(168,85,247,.2);border-radius:14px;padding:16px;margin-bottom:16px}
   .section-title{color:#c084fc;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
-  .week-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
-  .wk-btn{background:rgba(255,255,255,.06);border:1px solid rgba(168,85,247,.2);color:#d8b4fe;border-radius:8px;padding:8px 4px;font-size:.8rem;cursor:pointer;text-align:center;transition:all .2s}
-  .wk-btn:hover{background:rgba(168,85,247,.2)}
-  .wk-btn.active{background:linear-gradient(135deg,#7c3aed,#db2777);border-color:transparent;color:#fff;font-weight:700}
   .toggle-row{display:flex;gap:8px;margin-bottom:14px}
   .toggle-btn{flex:1;padding:9px;border-radius:10px;border:1px solid rgba(168,85,247,.3);background:rgba(255,255,255,.05);color:#c084fc;cursor:pointer;font-size:.85rem;transition:all .2s}
   .toggle-btn.active{background:linear-gradient(135deg,#7c3aed,#db2777);border-color:transparent;color:#fff;font-weight:700}
@@ -32,18 +28,15 @@
   .style-latin{background:linear-gradient(135deg,#ef4444,#dc2626)}
   .session-name{font-weight:700;font-size:1rem;color:#f0e6ff}
   .session-sub{font-size:.78rem;color:#a78bfa;margin-top:2px}
-
-  /* Video section */
   .video-section{margin-bottom:14px}
   .video-label{font-size:.78rem;color:#a78bfa;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
   .video-card{background:rgba(255,255,255,.05);border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:10px;text-decoration:none;transition:background .2s}
   .video-card:hover{background:rgba(168,85,247,.15)}
-  .video-thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;background:rgba(168,85,247,.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+  .video-thumb{width:44px;height:44px;border-radius:8px;flex-shrink:0;background:rgba(168,85,247,.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem}
   .video-info{flex:1;min-width:0}
   .video-title{font-size:.85rem;color:#f0e6ff;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .video-meta{font-size:.73rem;color:#a78bfa;margin-top:2px}
   .play-icon{color:#d946ef;font-size:1.1rem;flex-shrink:0}
-
   .log-section{border-top:1px solid rgba(168,85,247,.15);padding-top:12px}
   .log-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
   label{font-size:.78rem;color:#a78bfa;display:block;margin-bottom:3px}
@@ -73,21 +66,17 @@
   .cal-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;border:1px solid rgba(168,85,247,.2);color:#6b21a8}
   .cal-dot.done{background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff;border-color:transparent}
   .cal-dot.today{border-color:#d946ef;color:#d946ef}
+  .prog-bar-wrap{background:rgba(255,255,255,.15);border-radius:20px;height:6px;overflow:hidden;margin-top:6px}
+  .prog-bar{height:100%;border-radius:20px;background:rgba(255,255,255,.9);transition:width .4s}
 </style>
 </head>
 <body>
-<a class="back-btn" href="https://fletch1980.github.io/Complete_goddess/">← Complete Goddess</a>
+<a class="back-btn" href="https://fletch1980.github.io/Complete_goddess/" target="_self">← Complete Goddess</a>
 <h1>💃 Dance Cardio</h1>
 <div class="sub">Afrobeats · Hip Hop · Latin · 3×/week · Free on YouTube</div>
 
 <div id="phaseArea" style="text-align:center;margin-bottom:14px"></div>
-
 <div class="stats-row" id="statsRow"></div>
-
-<div class="section">
-  <div class="section-title">Week</div>
-  <div class="week-grid" id="weekGrid"></div>
-</div>
 
 <div class="section">
   <div class="section-title">Today's Session</div>
@@ -102,258 +91,242 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- Data — plain JS -->
 <script>
-const STORAGE_KEY='dcd_logs';
-const START_DATE=new Date('2026-03-09');
-const DAYS=['Wed','Sat','Sun'];
-const DAY_FULL={Wed:'Wednesday',Sat:'Saturday',Sun:'Sunday'};
+var STORAGE_PREFIX_DCD='dcd_';
+var SESSIONS_TO_ADVANCE_DCD=3;
+var DAYS=['Wed','Sat','Sun'];
+var DAY_FULL={Wed:'Wednesday',Sat:'Saturday',Sun:'Sunday'};
 
-function safeGet(k){try{return localStorage.getItem(k)}catch{try{return sessionStorage.getItem(k)}catch{return null}}}
-function safeSet(k,v){try{localStorage.setItem(k,v)}catch{try{sessionStorage.setItem(k,v)}catch{}}}
-
-function getWeek(){
-  const diff=Math.floor((new Date()-START_DATE)/(1000*60*60*24));
-  return Math.min(12,Math.max(1,Math.floor(diff/7)+1));
-}
-function getPhase(w){return w<=4?'Foundation':w<=8?'Build':'Peak'}
-function getPhaseClass(w){return w<=4?'phase-foundation':w<=8?'phase-build':'phase-peak'}
-
-// YouTube videos per style — 3 per style, rotated by week group
-const VIDEOS = {
-  hiphop: [
-    {title:'Hip Hop Dance Workout – 30 min',channel:'STEEZY Studio',dur:'30 min',url:'https://www.youtube.com/results?search_query=hip+hop+twerk+dance+workout+30+min'},
-    {title:'Twerk Cardio Workout – Beginner Friendly',channel:'YouTube Search',dur:'25 min',url:'https://www.youtube.com/results?search_query=twerk+cardio+workout+beginner'},
-    {title:'Hip Hop Cardio Dance – No Equipment',channel:'YouTube Search',dur:'28 min',url:'https://www.youtube.com/results?search_query=hip+hop+cardio+dance+no+equipment'},
-  ],
-  afro: [
-    {title:'Afrobeats Dance Workout – Full Body',channel:'YouTube Search',dur:'30 min',url:'https://www.youtube.com/results?search_query=afrobeats+dance+workout+full+body'},
-    {title:'Kukuwa African Dance Workout',channel:'Kukuwa Fitness',dur:'25 min',url:'https://www.youtube.com/results?search_query=kukuwa+african+dance+workout'},
-    {title:'Afro Dance Cardio – Feel the Beat',channel:'YouTube Search',dur:'28 min',url:'https://www.youtube.com/results?search_query=afro+dance+cardio+workout'},
-  ],
-  latin: [
-    {title:'Zumba Latin Dance Workout – 30 min',channel:'Zumba',dur:'30 min',url:'https://www.youtube.com/results?search_query=zumba+latin+dance+workout+30+min+free'},
-    {title:'Salsa & Reggaeton Cardio',channel:'YouTube Search',dur:'25 min',url:'https://www.youtube.com/results?search_query=salsa+reggaeton+cardio+dance+workout'},
-    {title:'Latin Dance Fitness – No Experience Needed',channel:'YouTube Search',dur:'28 min',url:'https://www.youtube.com/results?search_query=latin+dance+fitness+beginner+cardio'},
-  ]
-};
-
-const STYLE_KEY={Wed:'hiphop',Sat:'afro',Sun:'latin'};
-const SESSIONS={
+var SESSIONS={
   Wed:{style:'Hip Hop / Twerk',icon:'🔥',cls:'style-hiphop'},
   Sat:{style:'Afrobeats',icon:'🌍',cls:'style-afro'},
   Sun:{style:'Latin (Salsa / Reggaeton)',icon:'💃',cls:'style-latin'}
 };
-const DURATION={1:'25 min',2:'25 min',3:'26 min',4:'26 min',5:'27 min',6:'27 min',7:'28 min',8:'28 min',9:'29 min',10:'29 min',11:'30 min',12:'30 min'};
-const INTENSITY={1:'Low–Moderate',2:'Moderate',3:'Moderate',4:'Moderate–High',5:'High',6:'High',7:'High',8:'High',9:'Very High',10:'Very High',11:'Peak',12:'Peak'};
 
-// Focus tip per week
-const TIPS={
-  1:'Focus on just moving to the beat — don\'t worry about getting it perfect.',
-  2:'Try to feel each style\'s rhythm differently: Afro is grounded, Hip Hop is sharp, Latin is smooth.',
-  3:'Let your hips lead. Your arms follow naturally.',
-  4:'Pick one move per session to really nail this week.',
-  5:'Push the intensity — you\'ve got the basics now.',
-  6:'Try not to stop. Keep moving even when it gets hard.',
-  7:'Focus on transitions between moves.',
-  8:'Match your energy to the beat, not the other way around.',
-  9:'Go all out. This is peak phase.',
-  10:'Commit fully — full range of motion, full expression.',
-  11:'Dance like nobody\'s watching. Max effort.',
-  12:'Celebrate how far you\'ve come. Dance your heart out.'
+var VIDEOS={
+  hiphop:[
+    {title:'Hip Hop Dance Workout – 30 min',channel:'YouTube Search',dur:'30 min',url:'https://www.youtube.com/results?search_query=hip+hop+twerk+dance+workout+30+min'},
+    {title:'Twerk Cardio Workout – Beginner Friendly',channel:'YouTube Search',dur:'25 min',url:'https://www.youtube.com/results?search_query=twerk+cardio+workout+beginner'},
+    {title:'Hip Hop Cardio Dance – No Equipment',channel:'YouTube Search',dur:'28 min',url:'https://www.youtube.com/results?search_query=hip+hop+cardio+dance+no+equipment'}
+  ],
+  afro:[
+    {title:'Afrobeats Dance Workout – Full Body',channel:'YouTube Search',dur:'30 min',url:'https://www.youtube.com/results?search_query=afrobeats+dance+workout+full+body'},
+    {title:'Kukuwa African Dance Workout',channel:'Kukuwa Fitness',dur:'25 min',url:'https://www.youtube.com/results?search_query=kukuwa+african+dance+workout'},
+    {title:'Afro Dance Cardio – Feel the Beat',channel:'YouTube Search',dur:'28 min',url:'https://www.youtube.com/results?search_query=afro+dance+cardio+workout'}
+  ],
+  latin:[
+    {title:'Zumba Latin Dance Workout – 30 min',channel:'Zumba',dur:'30 min',url:'https://www.youtube.com/results?search_query=zumba+latin+dance+workout+30+min+free'},
+    {title:'Salsa & Reggaeton Cardio',channel:'YouTube Search',dur:'25 min',url:'https://www.youtube.com/results?search_query=salsa+reggaeton+cardio+dance+workout'},
+    {title:'Latin Dance Fitness – No Experience Needed',channel:'YouTube Search',dur:'28 min',url:'https://www.youtube.com/results?search_query=latin+dance+fitness+beginner+cardio'}
+  ]
 };
 
-let state={
-  week:getWeek(),
+var STYLE_KEY={Wed:'hiphop',Sat:'afro',Sun:'latin'};
+var DURATION={1:'25 min',2:'25 min',3:'26 min',4:'26 min',5:'27 min',6:'27 min',7:'28 min',8:'28 min',9:'29 min',10:'29 min',11:'30 min',12:'30 min'};
+var INTENSITY={1:'Low–Moderate',2:'Moderate',3:'Moderate',4:'Moderate–High',5:'High',6:'High',7:'High',8:'High',9:'Very High',10:'Very High',11:'Peak',12:'Peak'};
+var TIPS={1:'Focus on just moving to the beat — don\'t worry about getting it perfect.',2:'Try to feel each style\'s rhythm differently: Afro is grounded, Hip Hop is sharp, Latin is smooth.',3:'Let your hips lead. Your arms follow naturally.',4:'Pick one move per session to really nail this week.',5:'Push the intensity — you\'ve got the basics now.',6:'Try not to stop. Keep moving even when it gets hard.',7:'Focus on transitions between moves.',8:'Match your energy to the beat, not the other way around.',9:'Go all out. This is peak phase.',10:'Commit fully — full range of motion, full expression.',11:'Dance like nobody\'s watching. Max effort.',12:'Celebrate how far you\'ve come. Dance your heart out.'};
+
+function safeGetDCD(k){try{return localStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
+function safeSetDCD(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
+
+function recordSessionDCD(dateStr,weekNum){
+  var key=STORAGE_PREFIX_DCD+'sessions_w'+weekNum;
+  var sessions=JSON.parse(safeGetDCD(key)||'[]');
+  if(sessions.indexOf(dateStr)===-1){sessions.push(dateStr);safeSetDCD(key,JSON.stringify(sessions));}
+}
+function calcWeekDCD(){
+  var week=1;
+  for(var w=1;w<=12;w++){
+    var sessions=JSON.parse(safeGetDCD(STORAGE_PREFIX_DCD+'sessions_w'+w)||'[]');
+    if(sessions.length>=SESSIONS_TO_ADVANCE_DCD){week=w<12?w+1:12;}
+    else{week=w;break;}
+  }
+  return week;
+}
+function getSessionCountDCD(weekNum){
+  return JSON.parse(safeGetDCD(STORAGE_PREFIX_DCD+'sessions_w'+weekNum)||'[]').length;
+}
+function getPhaseClass(w){return w<=4?'phase-foundation':w<=8?'phase-build':'phase-peak';}
+function getPhase(w){return w<=4?'Foundation':w<=8?'Build':'Peak';}
+</script>
+
+<!-- App logic -->
+<script>
+function safeGet(k){try{return localStorage.getItem(k);}catch(e){try{return sessionStorage.getItem(k);}catch(e2){return null;}}}
+function safeSet(k,v){try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}}}
+
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2200);}
+
+var state={
   day:DAYS.includes(new Date().toLocaleDateString('en-US',{weekday:'short'}))?new Date().toLocaleDateString('en-US',{weekday:'short'}):'Wed',
-  logs:JSON.parse(safeGet(STORAGE_KEY)||'[]'),
+  logs:JSON.parse(safeGet(STORAGE_PREFIX_DCD+'logs')||'[]'),
   historyOpen:{},
   effort:{}
 };
 
-function saveLogs(){safeSet(STORAGE_KEY,JSON.stringify(state.logs))}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function saveLogs(){safeSet(STORAGE_PREFIX_DCD+'logs',JSON.stringify(state.logs));}
 
-function renderPhase(){
-  const w=state.week;
-  document.getElementById('phaseArea').innerHTML=`<span class="phase-badge ${getPhaseClass(w)}">Week ${w} · ${getPhase(w)} Phase</span>`;
+function renderPhase(w){
+  document.getElementById('phaseArea').innerHTML=
+    '<span class="phase-badge '+getPhaseClass(w)+'">Week '+w+' · '+getPhase(w)+' Phase</span>';
 }
 
 function renderStats(){
-  const total=state.logs.length;
-  const thisWeek=state.logs.filter(l=>l.week===state.week).length;
-  document.getElementById('statsRow').innerHTML=`
-    <div class="stat-card"><div class="stat-val">${total}</div><div class="stat-lbl">Total Sessions</div></div>
-    <div class="stat-card"><div class="stat-val">${thisWeek}</div><div class="stat-lbl">This Week</div></div>
-    <div class="stat-card"><div class="stat-val">${Math.round(total*27.5)}</div><div class="stat-lbl">~Mins Danced</div></div>`;
-}
-
-function renderWeekGrid(){
-  const g=document.getElementById('weekGrid');g.innerHTML='';
-  for(let w=1;w<=12;w++){
-    const b=document.createElement('button');
-    b.className='wk-btn'+(state.week===w?' active':'');
-    b.textContent='Wk '+w;
-    b.onclick=()=>{state.week=w;render()};
-    g.appendChild(b);
-  }
+  var w=calcWeekDCD();
+  var sc=getSessionCountDCD(w);
+  var total=state.logs.length;
+  document.getElementById('statsRow').innerHTML=
+    '<div class="stat-card"><div class="stat-val">'+total+'</div><div class="stat-lbl">Total Sessions</div></div>'+
+    '<div class="stat-card"><div class="stat-val">'+sc+'</div><div class="stat-lbl">This Week</div></div>'+
+    '<div class="stat-card"><div class="stat-val">'+Math.round(total*27.5)+'</div><div class="stat-lbl">~Mins Danced</div></div>';
 }
 
 function renderDayToggle(){
-  const d=document.getElementById('dayToggle');d.innerHTML='';
-  DAYS.forEach(day=>{
-    const b=document.createElement('button');
+  var d=document.getElementById('dayToggle');d.innerHTML='';
+  DAYS.forEach(function(day){
+    var b=document.createElement('button');
     b.className='toggle-btn'+(state.day===day?' active':'');
     b.textContent=DAY_FULL[day];
-    b.onclick=()=>{state.day=day;render()};
+    b.onclick=function(){state.day=day;render();};
     d.appendChild(b);
   });
 }
 
 function renderSession(){
-  const w=state.week,d=state.day;
-  const sk=STYLE_KEY[d];
-  const sess=SESSIONS[d];
-  const dur=DURATION[w],inten=INTENSITY[w];
-  const tip=TIPS[w];
+  var w=calcWeekDCD();
+  var sc=getSessionCountDCD(w);
+  var d=state.day,sk=STYLE_KEY[d],sess=SESSIONS[d];
+  var dur=DURATION[w],inten=INTENSITY[w],tip=TIPS[w];
+  var vids=VIDEOS[sk];
+  var primaryVid=vids[(w-1)%3],altVid=vids[w%3];
 
-  // Pick video — rotate by week (0,1,2 cycling)
-  const vids=VIDEOS[sk];
-  const primaryVid=vids[(w-1)%3];
-  const altVid=vids[w%3];
+  var videosHTML=
+    '<div class="video-section">'+
+    '<div class="video-label">▶ Dance Along – Free on YouTube</div>'+
+    '<a class="video-card" href="'+primaryVid.url+'" target="_blank" rel="noopener">'+
+      '<div class="video-thumb">🎬</div>'+
+      '<div class="video-info"><div class="video-title">'+primaryVid.title+'</div><div class="video-meta">'+primaryVid.channel+' · ~'+primaryVid.dur+' · Tap to search YouTube</div></div>'+
+      '<div class="play-icon">▶</div></a>'+
+    '<a class="video-card" href="'+altVid.url+'" target="_blank" rel="noopener">'+
+      '<div class="video-thumb">🎬</div>'+
+      '<div class="video-info"><div class="video-title">'+altVid.title+'</div><div class="video-meta">'+altVid.channel+' · ~'+altVid.dur+' · Tap to search YouTube</div></div>'+
+      '<div class="play-icon">▶</div></a>'+
+    '</div>';
 
-  const videosHTML=`
-    <div class="video-section">
-      <div class="video-label">▶ Dance Along – Free on YouTube</div>
-      <a class="video-card" href="${primaryVid.url}" target="_blank" rel="noopener">
-        <div class="video-thumb">🎬</div>
-        <div class="video-info">
-          <div class="video-title">${primaryVid.title}</div>
-          <div class="video-meta">${primaryVid.channel} · ~${primaryVid.dur} · Tap to search YouTube</div>
-        </div>
-        <div class="play-icon">▶</div>
-      </a>
-      <a class="video-card" href="${altVid.url}" target="_blank" rel="noopener">
-        <div class="video-thumb">🎬</div>
-        <div class="video-info">
-          <div class="video-title">${altVid.title}</div>
-          <div class="video-meta">${altVid.channel} · ~${altVid.dur} · Tap to search YouTube</div>
-        </div>
-        <div class="play-icon">▶</div>
-      </a>
-    </div>`;
+  var effortKey=w+'_'+d;
+  var ef=state.effort[effortKey]||0;
+  var stars=[1,2,3,4,5].map(function(i){return '<span class="star '+(i<=ef?'on':'')+'" onclick="setEffort(\''+effortKey+'\','+i+')">⭐</span>';}).join('');
 
-  const effortKey=`${w}_${d}`;
-  const ef=state.effort[effortKey]||0;
-  const stars=[1,2,3,4,5].map(i=>`<span class="star ${i<=ef?'on':''}" onclick="setEffort('${effortKey}',${i})">⭐</span>`).join('');
+  var loggedAll=state.logs.filter(function(l){return l.day===d&&l.week===w;});
+  var histOpen=state.historyOpen[d];
+  var histHTML='';
+  if(loggedAll.length>0&&histOpen){
+    var byDate={};
+    loggedAll.forEach(function(l){(byDate[l.date]=byDate[l.date]||[]).push(l);});
+    histHTML=Object.entries(byDate).sort(function(a,b){return b[0].localeCompare(a[0]);}).map(function(pair){
+      var date=pair[0],entries=pair[1];
+      return '<div class="history-group"><div class="history-date">'+date+'</div>'+
+        entries.map(function(e){
+          return '<div class="history-entry">'+
+            '<button class="delete-btn" onclick="deleteLog(\''+e.id+'\')">✕</button>'+
+            '<div class="meta">'+e.style+' · Week '+e.week+' · '+e.duration+'</div>'+
+            (e.effort?'<div>Effort: '+'⭐'.repeat(e.effort)+'</div>':'')+
+            (e.mood?'<div>Mood: '+e.mood+'</div>':'')+
+            (e.calories?'<div>~Calories: '+e.calories+'</div>':'')+
+            (e.notes?'<div style="margin-top:4px;color:#f0e6ff">'+e.notes+'</div>':'')+
+            '</div>';
+        }).join('')+'</div>';
+    }).join('');
+  }
 
-  const loggedAll=state.logs.filter(l=>l.day===d&&l.week===w);
-  const histOpen=state.historyOpen[d];
+  // Session progress bar
+  var progPct=Math.min(100,Math.round(sc/SESSIONS_TO_ADVANCE_DCD*100));
+  var progHTML=
+    '<div style="margin-bottom:12px">'+
+    '<div style="font-size:.78rem;color:rgba(255,255,255,.8);margin-bottom:4px">'+
+      sc+' of '+SESSIONS_TO_ADVANCE_DCD+' sessions done this week'+(sc>=SESSIONS_TO_ADVANCE_DCD?' · ✅ Advancing next session!':'')+
+    '</div>'+
+    '<div class="prog-bar-wrap"><div class="prog-bar" style="width:'+progPct+'%"></div></div>'+
+    '</div>';
 
-  const histHTML=loggedAll.length>0&&histOpen?(() => {
-    const byDate={};
-    loggedAll.forEach(l=>{(byDate[l.date]=byDate[l.date]||[]).push(l)});
-    return Object.entries(byDate).sort((a,b)=>b[0].localeCompare(a[0])).map(([date,entries])=>
-      `<div class="history-group">
-        <div class="history-date">${date}</div>
-        ${entries.map(e=>`
-          <div class="history-entry">
-            <button class="delete-btn" onclick="deleteLog('${e.id}')">✕</button>
-            <div class="meta">${e.style} · Week ${e.week} · ${e.duration}</div>
-            ${e.effort?`<div>Effort: ${'⭐'.repeat(e.effort)}</div>`:''}
-            ${e.mood?`<div>Mood: ${e.mood}</div>`:''}
-            ${e.calories?`<div>~Calories: ${e.calories}</div>`:''}
-            ${e.notes?`<div style="margin-top:4px;color:#f0e6ff">${e.notes}</div>`:''}
-          </div>`).join('')}
-      </div>`).join('');
-  })():'';
-
-  document.getElementById('sessionArea').innerHTML=`
-    <div class="session-card">
-      <div class="session-header">
-        <div class="style-icon ${sess.cls}">${sess.icon}</div>
-        <div>
-          <div class="session-name">${sess.style}</div>
-          <div class="session-sub">${dur} · ${inten} Intensity · Week ${w}</div>
-        </div>
-      </div>
-      <div style="background:rgba(168,85,247,.08);border-left:3px solid #a855f7;padding:9px 12px;border-radius:0 8px 8px 0;font-size:.83rem;color:#e9d5ff;margin-bottom:14px">
-        💡 <strong>Week ${w} Focus:</strong> ${tip}
-      </div>
-      ${videosHTML}
-      <div class="log-section">
-        <div class="section-title" style="margin-bottom:10px">Log This Session</div>
-        <div class="log-row">
-          <div style="flex:1;min-width:130px">
-            <label>Date</label>
-            <input type="date" id="logDate" value="${new Date().toISOString().split('T')[0]}"/>
-          </div>
-          <div style="flex:1;min-width:110px">
-            <label>~Calories Burned</label>
-            <input type="number" id="logCal" placeholder="e.g. 220" min="50" max="600"/>
-          </div>
-        </div>
-        <div class="log-row">
-          <div style="flex:1;min-width:130px">
-            <label>Mood / Energy</label>
-            <select id="logMood">
-              <option value="">Select...</option>
-              <option>🔥 High energy</option>
-              <option>😊 Feeling good</option>
-              <option>😐 Neutral</option>
-              <option>😴 Low energy</option>
-              <option>💪 Pushed through it</option>
-            </select>
-          </div>
-          <div style="flex:1">
-            <label>Effort Level</label>
-            <div class="effort-stars">${stars}</div>
-          </div>
-        </div>
-        <div>
-          <label>Notes (optional)</label>
-          <textarea id="logNotes" placeholder="How'd it feel? Any videos you loved?"></textarea>
-        </div>
-        <button class="log-btn" onclick="logSession()">✓ Log Session</button>
-      </div>
-      ${loggedAll.length>0?`<button class="history-toggle" onclick="toggleHistory('${d}')">${histOpen?'▲ Hide':'▼ Show'} History (${loggedAll.length})</button>`:''}
-      ${histHTML}
-    </div>`;
+  document.getElementById('sessionArea').innerHTML=
+    '<div class="session-card">'+
+      '<div class="session-header">'+
+        '<div class="style-icon '+sess.cls+'">'+sess.icon+'</div>'+
+        '<div><div class="session-name">'+sess.style+'</div><div class="session-sub">'+dur+' · '+inten+' Intensity · Week '+w+'</div></div>'+
+      '</div>'+
+      progHTML+
+      '<div style="background:rgba(168,85,247,.08);border-left:3px solid #a855f7;padding:9px 12px;border-radius:0 8px 8px 0;font-size:.83rem;color:#e9d5ff;margin-bottom:14px">'+
+        '💡 <strong>Week '+w+' Focus:</strong> '+tip+
+      '</div>'+
+      videosHTML+
+      '<div class="log-section">'+
+        '<div class="section-title" style="margin-bottom:10px">Log This Session</div>'+
+        '<div class="log-row">'+
+          '<div style="flex:1;min-width:130px"><label>Date</label><input type="date" id="logDate" value="'+new Date().toISOString().split('T')[0]+'"/></div>'+
+          '<div style="flex:1;min-width:110px"><label>~Calories Burned</label><input type="number" id="logCal" placeholder="e.g. 220" min="50" max="600"/></div>'+
+        '</div>'+
+        '<div class="log-row">'+
+          '<div style="flex:1;min-width:130px"><label>Mood / Energy</label>'+
+            '<select id="logMood"><option value="">Select...</option><option>🔥 High energy</option><option>😊 Feeling good</option><option>😐 Neutral</option><option>😴 Low energy</option><option>💪 Pushed through it</option></select>'+
+          '</div>'+
+          '<div style="flex:1"><label>Effort Level</label><div class="effort-stars">'+stars+'</div></div>'+
+        '</div>'+
+        '<div><label>Notes (optional)</label><textarea id="logNotes" placeholder="How\'d it feel? Any videos you loved?"></textarea></div>'+
+        '<button class="log-btn" onclick="logSession()">✓ Log Session</button>'+
+      '</div>'+
+      (loggedAll.length>0?'<button class="history-toggle" onclick="toggleHistory(\''+d+'\')">'+(histOpen?'▲ Hide':'▼ Show')+' History ('+loggedAll.length+')</button>':'')+
+      histHTML+
+    '</div>';
 }
 
 function renderCalendar(){
-  const today=new Date();
-  const monday=new Date(today);
+  var today=new Date(),monday=new Date(today);
   monday.setDate(today.getDate()-((today.getDay()+6)%7));
-  const row=document.getElementById('calRow');row.innerHTML='';
-  for(let i=0;i<7;i++){
-    const d=new Date(monday);d.setDate(monday.getDate()+i);
-    const ds=d.toISOString().split('T')[0];
-    const done=state.logs.some(l=>l.date===ds);
-    const isToday=ds===today.toISOString().split('T')[0];
-    const dot=document.createElement('div');
+  var row=document.getElementById('calRow');row.innerHTML='';
+  for(var i=0;i<7;i++){
+    var d=new Date(monday);d.setDate(monday.getDate()+i);
+    var ds=d.toISOString().split('T')[0];
+    var done=state.logs.some(function(l){return l.date===ds;});
+    var isToday=ds===today.toISOString().split('T')[0];
+    var dot=document.createElement('div');
     dot.className='cal-dot'+(done?' done':'')+(isToday&&!done?' today':'');
     dot.textContent=d.getDate();
     row.appendChild(dot);
   }
 }
 
-window.setEffort=function(key,val){state.effort[key]=val;renderSession()};
-window.toggleHistory=function(d){state.historyOpen[d]=!state.historyOpen[d];renderSession()};
-window.deleteLog=function(id){state.logs=state.logs.filter(l=>l.id!==id);saveLogs();render();showToast('Entry deleted')};
+window.setEffort=function(key,val){state.effort[key]=val;renderSession();};
+window.toggleHistory=function(d){state.historyOpen[d]=!state.historyOpen[d];renderSession();};
+window.deleteLog=function(id){state.logs=state.logs.filter(function(l){return l.id!==id;});saveLogs();render();showToast('Entry deleted');};
 window.logSession=function(){
-  const date=document.getElementById('logDate').value;
-  const cal=document.getElementById('logCal').value;
-  const mood=document.getElementById('logMood').value;
-  const notes=document.getElementById('logNotes').value.trim();
-  const effortKey=`${state.week}_${state.day}`;
-  const effort=state.effort[effortKey]||0;
+  var date=document.getElementById('logDate').value;
+  var cal=document.getElementById('logCal').value;
+  var mood=document.getElementById('logMood').value;
+  var notes=document.getElementById('logNotes').value.trim();
+  var w=calcWeekDCD();
+  var effortKey=w+'_'+state.day;
+  var effort=state.effort[effortKey]||0;
   if(!date){showToast('Please pick a date');return;}
-  state.logs.push({id:Date.now().toString(),week:state.week,day:state.day,date,style:SESSIONS[state.day].style,duration:DURATION[state.week],calories:cal||'',mood,notes,effort});
-  saveLogs();render();showToast('Session logged! 💃');
+  state.logs.push({id:Date.now().toString(),week:w,day:state.day,date:date,style:SESSIONS[state.day].style,duration:DURATION[w],calories:cal||'',mood:mood,notes:notes,effort:effort});
+  saveLogs();
+  recordSessionDCD(date,w);
+  render();
+  showToast('Session logged! 💃');
 };
 
-function render(){renderPhase();renderStats();renderWeekGrid();renderDayToggle();renderSession();renderCalendar()}
+function render(){
+  var w=calcWeekDCD();
+  renderPhase(w);
+  renderStats();
+  renderDayToggle();
+  renderSession();
+  renderCalendar();
+}
+
 render();
 </script>
+
 </body>
 </html>
