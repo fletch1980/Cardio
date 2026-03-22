@@ -79,6 +79,11 @@
 <div class="stats-row" id="statsRow"></div>
 
 <div class="section">
+  <div class="section-title">Week</div>
+  <div id="weekGrid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;"></div>
+</div>
+
+<div class="section">
   <div class="section-title">Today's Session</div>
   <div class="toggle-row" id="dayToggle"></div>
   <div id="sessionArea"></div>
@@ -316,10 +321,23 @@ window.logSession=function(){
   showToast('Session logged! 💃');
 };
 
+function renderWeekGrid(){
+  var w=calcWeekDCD();
+  var g=document.getElementById('weekGrid');g.innerHTML='';
+  for(var i=1;i<=12;i++){
+    var btn=document.createElement('div');
+    var isActive=(i===w);
+    btn.style.cssText='background:'+(isActive?'linear-gradient(135deg,#7c3aed,#db2777)':'rgba(255,255,255,.06)')+';border:1px solid '+(isActive?'transparent':'rgba(168,85,247,.2)')+';color:'+(isActive?'#fff':'#d8b4fe')+';border-radius:8px;padding:8px 4px;font-size:.8rem;font-weight:'+(isActive?'700':'400')+';text-align:center;';
+    btn.textContent='Wk '+i;
+    g.appendChild(btn);
+  }
+}
+
 function render(){
   var w=calcWeekDCD();
   renderPhase(w);
   renderStats();
+  renderWeekGrid();
   renderDayToggle();
   renderSession();
   renderCalendar();
